@@ -33,4 +33,4 @@ The application should run from the command line, accept user actions and inputs
 ---
 
 ## **Project URL**
-🔗 **[GitHub Repository](https://github.com/SuvidT/Command-Line-Input-Task-Tracker)**
+https://roadmap.sh/projects/task-tracker
