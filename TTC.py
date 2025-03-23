@@ -93,17 +93,28 @@ def delete_task(id):
     with open("tasks.json", "w") as file:
         json.dump(data, file, indent=4)
 
+def mark_progress(id, status, current_time):
+    data = {}
+    with open("tasks.json", "r") as file:
+        data = json.load(file)
+
+        data["tasks"][id]["status"] = status
+        data["tasks"][id]["updated"] = current_time
+    
+    with open("tasks.json", "w") as file:
+        json.dump(data, file, indent=4)
+
 while True:
     # This is the commands sectino
     # We handle all commands here
     cmd = input("task-cli ").split()
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if cmd[0] == "exit":
         break
     
     elif cmd[0] == "add":
         description = " ".join(cmd[1:]).strip(" \"")
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         id = add_task(description, current_time)
         print(f"Task added successfully (ID: {id})")
     
@@ -113,7 +124,6 @@ while True:
         else:
             id = int(cmd[1])
             description = " ".join(cmd[2:]).strip(" \"")
-            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             update_task(id, description, current_time)
             print(f"Successfully updated task (ID: {id})")
     
@@ -126,14 +136,24 @@ while True:
             print(f"Successfully deleted task (ID: {id})")
     
     elif cmd[0] == "mark-in-progress":
-        pass # to be implemented
+        if len(cmd) < 2 or not can_be_int(cmd[1]):
+            print("Invalid parameters")
+        else:
+            id = int(cmd[1])
+            mark_progress(id, "in progress", current_time)
+            print(f"Successfully marked task as in progress (ID: {id})")
     
     elif cmd[0] == "mark-done":
-        pass # to be implemented
+        if len(cmd) < 2 or not can_be_int(cmd[1]):
+            print("Invalid parameters")
+        else:
+            id = int(cmd[1])
+            mark_progress(id, "done", current_time)
+            print(f"Successfully marked task as done (ID: {id})")
     
     elif cmd[0] == "list":
         if len(cmd) == 1:
-            pass # to be imp
+            
     
     else:
         print("Invalid command")
