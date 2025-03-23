@@ -37,7 +37,7 @@ def add_task(description, current_time):
         else:
             data["tasks"]
             id = data["empty"]
-            for n in data["tasks"][data["emppty"]:len(data["tasks"])]:
+            for n in data["tasks"][data["empty"]:len(data["tasks"])]:
                 if n == 0:
                     task = {
                         "id": id,
@@ -59,6 +59,11 @@ def update_task(id, description, current_time):
     data = {}
     with open("tasks.json", "r") as file:
         data = json.load(file)
+        
+        if len(data["tasks"]) <= id:
+            print("Invalid ID")
+            return
+
         data["tasks"][id]["description"] = description
         data["tasks"][id]["updated"] = current_time
 
@@ -73,8 +78,20 @@ def can_be_int(i):
         return False
 
 def delete_task(id):
-    # This function deletes a task from the json file
-    pass
+    data = {}
+    with open("tasks.json", "r") as file:
+        data = json.load(file)
+
+        if len(data["tasks"]) <= id:
+            print("Invalid ID")
+            return
+        if id < data["empty"]:
+            data["empty"] = id
+
+        data["tasks"][id] = 0
+    
+    with open("tasks.json", "w") as file:
+        json.dump(data, file, indent=4)
 
 while True:
     # This is the commands sectino
@@ -91,8 +108,8 @@ while True:
         print(f"Task added successfully (ID: {id})")
     
     elif cmd[0] == "update":
-        if len(cmd) < 3 and can_be_int(cmd[1]):
-            print("Invalid command")
+        if len(cmd) < 3 or not can_be_int(cmd[1]):
+            print("Invalid parameters")
         else:
             id = int(cmd[1])
             description = " ".join(cmd[2:]).strip(" \"")
@@ -101,7 +118,12 @@ while True:
             print(f"Successfully updated task (ID: {id})")
     
     elif cmd[0] == "delete":
-        pass # to be implemented
+        if len(cmd) < 2 or not can_be_int(cmd[1]):
+            print ("Invalid parameters")
+        else:
+            id = int(cmd[1])
+            delete_task(id)
+            print(f"Successfully deleted task (ID: {id})")
     
     elif cmd[0] == "mark-in-progress":
         pass # to be implemented

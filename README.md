@@ -30,4 +30,8 @@ Make sure to add these properties to the JSON file when adding a new task and up
 
 # Project Details
 The Command line prompt will be done using the input function to get input from the user
-we will use a .json file to store the 
+we will use a .json file to store the
+
+## To-Do
+[ ] add a validation section to the update function
+[ ] finish the delete task part
