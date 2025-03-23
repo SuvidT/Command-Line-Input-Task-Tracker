@@ -9,9 +9,6 @@ if not os.path.exists("tasks.json"):
         data = {
             "empty": 0,
             "tasks": [],
-            "todo": {},
-            "in-progress": {},
-            "done": {}
         }
         json.dump(data, file, indent=4)
 
@@ -60,7 +57,7 @@ def update_task(id, description, current_time):
     with open("tasks.json", "r") as file:
         data = json.load(file)
         
-        if len(data["tasks"]) <= id:
+        if len(data["tasks"]) <= id or data["tasks"][id] == 0:
             print("Invalid ID")
             return
 
@@ -69,6 +66,8 @@ def update_task(id, description, current_time):
 
     with open("tasks.json", "w") as file:
         json.dump(data, file, indent=4)
+
+    print("Successfully updated task (ID: {id})")
 
 def can_be_int(i):
     try:
@@ -92,6 +91,8 @@ def delete_task(id):
     
     with open("tasks.json", "w") as file:
         json.dump(data, file, indent=4)
+    
+    print(f"Successfully deleted task (ID: {id})")
 
 def mark_progress(id, status, current_time):
     data = {}
@@ -103,6 +104,7 @@ def mark_progress(id, status, current_time):
     
     with open("tasks.json", "w") as file:
         json.dump(data, file, indent=4)
+
 
 while True:
     # This is the commands sectino
@@ -125,7 +127,6 @@ while True:
             id = int(cmd[1])
             description = " ".join(cmd[2:]).strip(" \"")
             update_task(id, description, current_time)
-            print(f"Successfully updated task (ID: {id})")
     
     elif cmd[0] == "delete":
         if len(cmd) < 2 or not can_be_int(cmd[1]):
@@ -133,7 +134,6 @@ while True:
         else:
             id = int(cmd[1])
             delete_task(id)
-            print(f"Successfully deleted task (ID: {id})")
     
     elif cmd[0] == "mark-in-progress":
         if len(cmd) < 2 or not can_be_int(cmd[1]):
@@ -152,8 +152,24 @@ while True:
             print(f"Successfully marked task as done (ID: {id})")
     
     elif cmd[0] == "list":
+        listType = ""
         if len(cmd) == 1:
-            
+            listType = "all"
+        elif cmd[1] == "todo":
+            listType = "todo"
+        elif cmd[1] == "in-progress":
+            listType = "in progress"
+        elif cmd[1] == "done":
+            listType = "done"
+        else:
+            pass
+
+        with open("tasks.json", "r") as file:
+            data = json.load(file)
+
+            for n in data["tasks"]:
+                if listType == "all" or n["status"] == listType:
+                    print(f"ID: {n["id"]}, Task: {n["description"]}")
     
     else:
         print("Invalid command")
