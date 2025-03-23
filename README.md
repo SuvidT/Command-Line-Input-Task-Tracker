@@ -33,4 +33,4 @@ The Command line prompt will be done using the input function to get input from 
 we will use a .json file to store the
 
 # Project URL
-[Project URL](https://github.com/SuvidT/Command-Line-Input-Task-Tracker)
+https://github.com/SuvidT/Command-Line-Input-Task-Tracker
